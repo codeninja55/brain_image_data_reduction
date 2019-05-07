@@ -1,0 +1,19 @@
+% fMRI impulse response function from "Detection versus Estimation in
+% Event-Related fMRI: Choosing the Optimal Stimulus Timing," R. Birn,
+% R. Cox, and P. Bandettini, NeuroImage 15, pp. 252-264 (2002).
+%
+% this is equation (1) from that paper.  It gives max height of ~1.000
+%
+% Example: Return impulse response at t=3.5sec after impulse
+%  birnImpulse(3.5)
+%
+
+% History: 
+%   Tom M. created July 1, 2002
+%
+
+function[rslt] = birnImpulse(t)
+  global A
+  A=1.0/111.8;
+  rslt= A .* t.^8.60 .* exp(-t./0.547);
+  
