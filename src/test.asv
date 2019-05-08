@@ -1,10 +1,9 @@
 % Tutorial
+%% Note: Using the double % creates a section between them and you can use
+%% Ctrl + Enter to run just that section
 
-% Note: Using the double % creates a section between them and you can use
-% Ctrl + Enter to run just that section
-
-%%  
-% load the data (assume you're using version 7 of Matlab.  If you're using
+%% 
+load the data (assume you're using version 7 of Matlab.  If you're using
 % version 6, load the -v6.mat file instead)
     load('data\data-starplus-04847-v7.mat')
 
@@ -17,30 +16,24 @@
     info
     data
 
-%% 
-% draw a picture of activation for the z=4 slice of the brain for trial 4, at time 8
+%% draw a picture of activation for the z=4 slice of the brain for trial 4, at time 8
     plotSnapshot(info, data, meta, 4, 4, 8, 0, 0);
 
-%% 
-% do the same as above, but for all slices of the brain
+%% do the same as above, but for all slices of the brain
     plotSnapshot3D(info, data, meta, 4, 8, 0, 0);
 
-%% 
-% play a movie showing the activity over time for trial 4
+%% play a movie showing the activity over time for trial 4
     M = animate16Trial(info,data,meta,4);
     movie(M,2,.5)  % play it again, twice, at .5 frames/second
     
-%% 
-% plot the time course for a single voxel at coord <36,62,8>
+%% plot the time course for a single voxel at coord <36,62,8>
     plotVoxel(info,data,meta,36,62,8)
 
-%% 
-% plot the time course for just trials 3 and 4 of voxel <36,62,8>
+%% plot the time course for just trials 3 and 4 of voxel <36,62,8>
     [i, d, m] = transformIDM_selectTrials(info,data,meta,[3, 4]);
     plotVoxel(i,d,m,36,62,8);
 
-%% 
-% create an info,data,meta containing just the mean activitation over the trials 
+%% create an info,data,meta containing just the mean activitation over the trials 
 % that require the subject to make a decision, then plot that mean activation.
 
     alltrials = 1:meta.ntrials
