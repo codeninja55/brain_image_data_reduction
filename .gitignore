@@ -36,3 +36,5 @@ vignettes/*.pdf
 rsconnect/
 
 .idea/
+
+src/data/
