@@ -37,4 +37,5 @@ rsconnect/
 
 .idea/
 
-src/data/
+*.mat
+*.fig
