@@ -1,0 +1,124 @@
+<pre>
+------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------
+Welcome <./index.php>
+------------------------------------------------------------------------
+News <./news.php>
+------------------------------------------------------------------------
+Downloads <./down.php>
+------------------------------------------------------------------------
+Overview and Examples <./over.php>
+------------------------------------------------------------------------
+How to Use <./intro.php>
+------------------------------------------------------------------------
+Book and Resources <./book.php>
+------------------------------------------------------------------------
+Contributions <./contrib.php>
+------------------------------------------------------------------------
+Bugs <./bugs.php>
+------------------------------------------------------------------------
+Links <./links.php>
+------------------------------------------------------------------------
+		
+
+
+  Overview and Examples
+
+The latest release of Netlab includes the following algorithms:
+
+    * PCA
+    * Mixtures of probabilistic PCA
+    * Gaussian mixture model with EM training algorithm
+    * Linear and logistic regression with IRLS training algorithm
+    * Multi-layer perceptron with linear, logistic and softmax outputs
+      and appropriate error functions
+    * Radial basis function (RBF) networks with both Gaussian and
+      non-local basis functions
+    * Optimisers, including quasi-Newton methods, conjugate gradients
+      and scaled conjugate gradients
+    * Multi-layer perceptron with Gaussian mixture outputs (mixture
+      density networks)
+    * Gaussian prior distributions over parameters for the MLP, RBF and
+      GLM including multiple hyper-parameters
+    * Laplace approximation framework for Bayesian inference (evidence
+      procedure)
+    * Automatic Relevance Determination for input selection
+    * Markov chain Monte-Carlo including simple Metropolis and hybrid
+      Monte-Carlo
+    * K-nearest neighbour classifier
+    * K-means clustering
+    * Generative Topographic Map
+    * Neuroscale topographic projection
+    * Gaussian Processes
+    * Hinton diagrams for network weights
+    * Self-organising map 
+
+The integration with Matlab means that powerful facilities are available
+to pre-process the data, graph important variables, and visualise
+results. In addition, Matlab programs that use Netlab are portable
+across all main platforms and operating systems (including UNIX®,
+Microsoft Windows95® and Apple Macintosh® environments).
+
+
+    Backwards compatibility
+
+As far as I know, there are only two areas where there are backwards
+compatibility issues between release 3.2 and earlier releases.
+
+    * Certain networks (of MLP and MDN types) trained under earlier
+      versions of the toolkit will not work with the new functions. This
+      is due to a change of name of one field in the new data structure.
+      It can be corrected by running the Netlab function |convertoldnet|
+      after the network has been loaded in Matlab. This function works
+      correctly with all networks, both version 3.2 and earlier.
+    * The K-nearest-neighbour implementation now involves a data
+      structure (to store the training data) so has separate creation
+      and running functions |knn| and |knnfwd| respectively. See
+      |demknn| for an example of how these should be used. 
+
+Documentation is provided in two forms: brief information is provided
+via the Matlab help system, while a full on-line reference manual is
+supplied in HTML, which can be read with any suitable browser (such as
+Netscape®). Netlab is provided with demonstration programs and data sets
+to illustrate its use on a variety of problems.
+
+Netlab is implemented as a set of functions written in the Matlab
+language and requires the Matlab environment to run. Matlab is an
+extendible technical computing environment offering powerful numeric
+computation and visualisation tools. Netlab uses only core Matlab
+functions, so is not dependent on any of the optional toolboxes.
+
+	
+
+
+    Examples
+
+
+
+/ An example of a demonstration taken from Netlab showing sample neural
+network functions drawn from a Gaussian prior over weights in which the
+effect of changing individual hyper-parameters can be explored./
+
+
+/ Contours of the conditional probability density predicted by a mixture
+density network showing the possibility of multi-modal distributions. /
+
+------------------------------------------------------------------------
+/This page is maintained by Ian Nabney
+<../People/nabneyit/Welcome.html>/ (i.t.nabney@aston.ac.uk
+<mailto:i.t.nabney@aston.ac.uk>)
+------------------------------------------------------------------------
+Neural Computing Research Group
+Information Engineering
+Aston University
+Birmingham B4 7ET
+United Kingdom
+
+Phone: +44 (0)121 359 3611 x. 4685
+Fax: +44 (0)121 333 6215
+
+------------------------------------------------------------------------
+Last modified: Thurs Nov 13 2003
+</pre>
