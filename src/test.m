@@ -6,7 +6,7 @@
 %%  
 % load the data (assume you're using version 7 of Matlab.  If you're using
 % version 6, load the -v6.mat file instead)
-    load('data\data-starplus-04847-v7.mat')
+    load('data/data-starplus-04847-v7.mat')
 
 % add the functions as paths to MATLAB
     addpath('fmri', 'fmri/Netlab')
@@ -17,6 +17,11 @@
     info
     data
 
+%%
+% Testing 
+
+    info(18)
+    
 %% 
 % draw a picture of activation for the z=4 slice of the brain for trial 4, at time 8
     plotSnapshot(info, data, meta, 4, 4, 8, 0, 0);
