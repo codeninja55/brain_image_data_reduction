@@ -8,8 +8,12 @@
 %  - Oct 07,2005 Wei - rewrite
 
 % load the data.  returns cell arrays of IDMs
-load data-starplus-04847-v7.mat;
-[info,ndata,nmeta,activeVoxels] = transformIDM_selectActiveVoxact(info, data, meta, 5);
+load ('data/data-starplus-04847-v7.mat');
+
+% add the functions as paths to MATLAB
+addpath('fmri', 'fmri/Netlab')
+
+[info,ndata,nmeta,activeVoxels] = transformIDM_selectActiveVoxact(info, data, meta, 10);
 
 
 % transform one IDM them into examples

@@ -55,7 +55,7 @@ meta =
 
 #### INFO
 
-`info`: This variable defines the experiment in terms of a sequence of 'trials'. 'info' is a 1x54 struct array, describing the 54 time intervals, or trials. Most of these time intervals correspond to trials during which the subject views a single picture and a single sentence, and presses a button to indicate whether the sentence correctly describes the picture.  Other time intervals correspond to rest periods.  The relevant fields of info are illustrated in the following example:
+`info`: This variable defines the experiment in terms of a sequence of 'trials'. 'info' is a `1x54` struct array, describing the 54 time intervals, or trials. Most of these time intervals correspond to trials during which the subject views a single picture and a single sentence, and presses a button to indicate whether the sentence correctly describes the picture. Other time intervals correspond to rest periods.  The relevant fields of info are illustrated in the following example:
 
 
 
@@ -73,6 +73,8 @@ info(18)
     actionAnswer: 0
     actionRT: 3613
 ```
+
+
 
 * `info.mint` gives the time of the first image in the interval (the minimum time)
 
@@ -111,6 +113,6 @@ info(18)
 
 ##### DATA
 
-`data`: This variable contains the raw observed data.  The fMRI data is a sequence of images collected over time, one image each 500 msec.  The data structure 'data' is a `[54x1]` cell array, with one cell per 'trial' in the experiment. Each element in this cell array is an `NxV` array of observed fMRI activations. The element data{x}(t,v) gives the fMRI observation at voxel v, at time t within trial x.  Here `t` is the within-trial time, ranging from `1` to `info(x).len`.  The full image at time `t` within trial `x` is given by `data{x}(t,:)`.
+`data`: This variable contains the raw observed data.  The fMRI data is a sequence of images collected over time, one image each 500 msec.  The data structure 'data' is a `[54x1]` cell array, with one cell per 'trial' in the experiment. Each element in this cell array is an `NxV` array of observed fMRI activations. The element `data{x}(t,v)` gives the fMRI observation at voxel `v`, at time `t` within trial `x`.  Here `t` is the within-trial time, ranging from `1` to `info(x).len`.  The full image at time `t` within trial `x` is given by `data{x}(t,:)`.
 
 Note the absolute time for the first image within trial x is given by `info(x).mint`.
