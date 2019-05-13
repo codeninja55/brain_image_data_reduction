@@ -1,10 +1,14 @@
-load data-starplus-04847-v7.mat;
-% animateTrial(info,data,meta,3,6);                                  %see movie
-[i,d,m]=transformIDM_selectTrials(info,data,meta,find([info.cond]~=0)); % seletct non-noisey trials
-[examples,labels,expInfo] = idmToExamples_condLabel(i,d,m);  %create training data
+%% add the functions as paths to MATLAB
+addpath('fmri', 'fmri/Netlab')
+
+load('data\data-starplus-04847-v7.mat');
+% animateTrial(info,data,meta,3,6);  % see movie
+[i,d,m] = transformIDM_selectTrials(info,data,meta,find([info.cond]~=0)); % select non-noisey trials
+
+[examples,labels,expInfo] = idmToExamples_condLabel(i,d,m);  % create training data
 save("input.mat", "examples", "labels", "-v6");
 
-% PCA
+%% PCA
 load output.mat
 % train a classifier
 [classifier] = trainClassifier(trainExamples,trainLabels,'nbayes');
@@ -15,8 +19,7 @@ load output.mat
 disp(result{1});
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% test
+%% Tutorial
 
 % load the data (assume you're using version 7 of Matlab.  If you're using
 % version 6, load the -v6.mat file instead)
@@ -56,11 +59,11 @@ that require the subject to make a decision, then plot that mean activation.
    animate16Trial(i,d,m,1);
 
 % create training examples consisting of 8 second (16 image) windows of data,
-labeled by whether the subject is viewing a picture or a sentence.  Label 1
-means they are reading a sentence, label=2 means they are viewing a picture.
-"examples" is a NxM array, where N is the number of training examples, and M is
-the number of features per training example (in this case, one feature per voxel
-at each of 16 time points).
+% labeled by whether the subject is viewing a picture or a sentence.  Label 1
+% means they are reading a sentence, label=2 means they are viewing a picture.
+% "examples" is a NxM array, where N is the number of training examples, and M is
+% the number of features per training example (in this case, one feature per voxel
+% at each of 16 time points).
 
     % collect the non-noise and non-fixation trials
     trials=find([info.cond]>1); 
@@ -94,9 +97,9 @@ at each of 16 time points).
    [classifier] = trainClassifier(examples,labels,'nbayes');   %train classifier
 
 % apply the Naive Bayes classifier to the training data (it's best to use cross
-validation, of course, to obtain an estimate of its true error).  The returned
-array 'predictions' is an array where predictions(k,j) = log P(example_k |
-class_j).
+% validation, of course, to obtain an estimate of its true error).  The returned
+% array 'predictions' is an array where predictions(k,j) = log P(example_k |
+% class_j).
 
    [predictions] = applyClassifier(examples,classifier);       %test it
 
