@@ -40,3 +40,11 @@ rsconnect/
 *.mat
 *.fig
 *.Rproj
+
+src/data/miyawaki2008/mask/
+
+*.pyc
+
+src/data/miyawaki2008/func/
+
+src/data/miyawaki2008/label/

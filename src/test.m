@@ -17,6 +17,14 @@
     info
     data
 
+% save some example data to work on
+% select non-noisey trials
+    [i,d,m] = transformIDM_selectTrials(info,data,meta,find([info.cond]~=0));
+
+% create training data
+    [examples,labels,expInfo] = idmToExamples_condLabel(i,d,m);
+    save("input.mat", "examples", "labels", "-v6");
+
 %%
 % Testing 
 
