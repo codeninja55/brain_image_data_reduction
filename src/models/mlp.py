@@ -2,7 +2,7 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 # brain_image_data_reduction
-# aann.py
+# mlp.py
 # 
 # Attributions: 
 # [1] 
@@ -16,12 +16,13 @@ __version__ = '{mayor}.{minor}.{rel}'
 __maintainer__ = 'Andrew Che'
 __email__ = 'andrew@neuraldev.io'
 __status__ = '{dev_status}'
-__date__ = '2019.05.14'
+__date__ = '2019.05.15'
 
-"""aann.py: 
+"""mlp.py: 
 
 {Description}
 """
+
 import numpy as np
 
 
@@ -215,3 +216,4 @@ class MLP:
                                            loss_gradient)  # gradient w.r.t. input, also weight updates
 
         return np.mean(loss)
+

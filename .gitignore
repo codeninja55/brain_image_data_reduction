@@ -48,3 +48,6 @@ src/data/miyawaki2008/mask/
 src/data/miyawaki2008/func/
 
 src/data/miyawaki2008/label/
+
+src/notebooks/checkpoint
+src/notebooks/.ipynb_checkpoints/
