@@ -62,11 +62,11 @@ input_files = {
 for f = 1:6
     file = input_files{f}
     subject = file(20:24)
-    output_file = strcat('data/data-starplus-', subject, '-4000.mat')
+    output_file = strcat('data/data-starplus-', subject, '-1000.mat')
     load(file);
     %rois = {'CALC' 'LIPL' 'LT' 'LTRIA' 'LOPER' 'LIPS' 'LDLPFC'};
     %[roiInfo,roiData,roiMeta] = transformIDM_selectROIVoxels(info,data,meta,rois)
-    [info,ndata,nmeta,activeVoxels] = transformIDM_selectActiveVoxact(info,data,meta,4000);
+    [info,ndata,nmeta,activeVoxels] = transformIDM_selectActiveVoxact(info,data,meta,1000);
     [examples,labels,expInfo] = idmToExamples_fixation(info,ndata,nmeta,'full');
     %[examples,labels,expInfo] = idmToExamples_condLabel(info,ndata,nmeta);
     save(output_file, "examples", "labels", "-v7");

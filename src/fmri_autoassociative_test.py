@@ -53,7 +53,7 @@ from fmri_classifier_test import base_classifier_test, get_base_classifier_data
 
 # %% # ===== # LOADING DATA # ===== #
 
-raw_data_x, raw_data_y = load_fmri()
+raw_data_x, raw_data_y = load_smaller_fmri()
 # raw_data_x, raw_data_y = load_smaller_fmri()
 print('Raw data shape - x: {}, y: {}'.format(raw_data_x[0].shape, raw_data_y[0].shape))
 
@@ -67,24 +67,29 @@ rand_idx = np.random.randint(0, len(subject_choices))
 test_subject = subject_choices.pop(rand_idx)
 
 # concatenate all the random choices of subjects to train on
-X_train_full = raw_data_x[0]
+_X_train_full = raw_data_x[0]
 y_train_full = raw_data_y[0]
 for i in subject_choices[1:len(subject_choices)]:
-    X_train_full = np.append(X_train_full, raw_data_x[i], axis=0)
+    _X_train_full = np.append(_X_train_full, raw_data_x[i], axis=0)
     y_train_full = np.append(y_train_full, raw_data_y[i], axis=0)
 
 y_train_full = y_train_full.reshape(-1)
-X_test = raw_data_x[test_subject]
+_X_test = raw_data_x[test_subject]
 y_test = raw_data_y[test_subject].reshape(-1)
 
-X_full = raw_data_x.pop(0)
+_X_full = raw_data_x.pop(0)
 y_full = raw_data_y.pop(0)
 for x_arr, y_arr in zip(raw_data_x, raw_data_y):
-    X_full = np.append(X_full, x_arr, axis=0)
+    _X_full = np.append(_X_full, x_arr, axis=0)
     y_full = np.append(y_full, y_arr, axis=0)
 
 
-del raw_data_x, raw_data_y
+# Optimise by reducing float size for TF on GPU
+X_full = _X_full.astype(np.float32, copy=True)
+X_train_full = _X_train_full.astype(np.float32, copy=True)
+X_test = _X_test.astype(np.float32, copy=True)
+
+del raw_data_x, raw_data_y, _X_full, _X_train_full, _X_test
 
 # %% # ===== # DATA ENCODING # ===== #
 
@@ -103,9 +108,9 @@ X_train, X_val, y_train, y_val = train_test_split(
     random_state=RANDOM_SEED
 )
 
-# print('Training set shape - x: {}, y: {}'.format(X_train_full.shape, y_train_full.shape))
-# print('Training eval shape - x: {}, y: {}'.format(X_val.shape, y_val.shape))
-# print('Testing data shape - x: {}, y: {}'.format(X_test.shape, y_test_encoded.shape))
+print('Training set shape - x: {}, y: {}'.format(X_train_full.shape, y_train_full.shape))
+print('Training eval shape - x: {}, y: {}'.format(X_val.shape, y_val.shape))
+print('Testing data shape - x: {}, y: {}'.format(X_test.shape, y_test_encoded.shape))
 
 # print('Training set class distribution:\n 1: {} \n 2: {}'.format(*Counter(y_train).values()))
 # print('Evaluation set class distribution:\n 1: {} \n 2: {}'.format(*Counter(y_val).values()))
@@ -113,28 +118,28 @@ X_train, X_val, y_train, y_val = train_test_split(
 
 # %% # ===== # DATA ENCODING # ===== #
 print('Dimensionality Reduction')
-bottleneck_dim = 600
+bottleneck_dim = 300
 print('Bottleneck Dimensions: {}'.format(bottleneck_dim))
 
-autoencoder = Autoencoder(X_full.shape[1], bottleneck_dim, epoch=500, learning_rate=1e-4)
-# autoencoder.plot_model()
-autoencoder.summary()
-# prompt_continue('Do you want to continue with the autoassociative encoding of this model?')
-
-autoencoder.train(X_full, X_full, batch_size=8)
-
-export_X = autoencoder.get_encoded_image(X_full)
-encoded_X_train = autoencoder.get_encoded_image(X_full)
-encoded_X_val = autoencoder.get_encoded_image(X_val)
-encoded_X_test = autoencoder.get_encoded_image(X_test)
-
-print('Encoded training set shape - x: {}'.format(encoded_X_train.shape))
-print('Encoded training eval shape - x: {}'.format(encoded_X_val.shape))
-print('Encoded testing data shape - x: {}'.format(encoded_X_test.shape))
+# autoencoder = Autoencoder(X_full.shape[1], bottleneck_dim, epoch=750, learning_rate=1e-4)
+# # autoencoder.plot_model()
+# autoencoder.summary()
+# # prompt_continue('Do you want to continue with the autoassociative encoding of this model?')
+#
+# autoencoder.train(X_train_full, X_test, batch_size=8)
+#
+# export_X = autoencoder.get_encoded_image(X_full)
+# encoded_X_train = autoencoder.get_encoded_image(X_full)
+# encoded_X_val = autoencoder.get_encoded_image(X_val)
+# encoded_X_test = autoencoder.get_encoded_image(X_test)
+#
+# print('Encoded training set shape - x: {}'.format(encoded_X_train.shape))
+# print('Encoded training eval shape - x: {}'.format(encoded_X_val.shape))
+# print('Encoded testing data shape - x: {}'.format(encoded_X_test.shape))
 
 # %% %% # ===== # EXPORT # ===== #
-np.savetxt('data/encoded_fmri_X.csv', export_X, delimiter=',')
-np.savetxt('data/encoded_fmri_y.csv', y_full, delimiter=',')
+# np.savetxt('data/encoded_fmri_X.csv', export_X, delimiter=',')
+# np.savetxt('data/encoded_fmri_y.csv', y_full, delimiter=',')
 # np.savetxt('data/raw_fmri_X.csv', X_train_full, delimiter=',')
 
 # %% # ===== # TRAINING AND CLASSIFICATION # ===== #
@@ -153,12 +158,28 @@ np.savetxt('data/encoded_fmri_y.csv', y_full, delimiter=',')
 #     evaluate=False
 # )
 
+# %% AUTOASSOCIATIVE TEST
+
+autoassociative = Autoassociative(X_train_full.shape[1], bottleneck_dim, epoch=500, learning_rate=1e-3)
+autoassociative.summary()
+
+autoassociative.train(X_train_full, X_test, batch_size=8)
+
+export_X_2 = autoassociative.get_encoded_image(X_full)
+encoded_X_train_2 = autoassociative.get_encoded_image(X_train)
+encoded_X_val_2 = autoassociative.get_encoded_image(X_val)
+encoded_X_test_2 = autoassociative.get_encoded_image(X_test)
 
 # %% Clean up
-import gc
+# import gc
 # del autoassociative
 K.clear_session()
-gc.collect()
+# gc.collect()
+
+# %%
+
+np.savetxt('data/autoassociated_fmri_X.csv', export_X_2, delimiter=',')
+# np.savetxt('data/encoded_fmri_y.csv', y_full, delimiter=',')
 
 # %%
 
