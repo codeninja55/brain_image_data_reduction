@@ -51,15 +51,15 @@ class Autoassociative(object):
         # Bottleneck layer
         hidden_layer = Dense(
             units=hidden_dim,
-            activation='sigmoid',
+            # activation='sigmoid',
             name='Bottleneck_Layer')(mapping_layer)
         # hidden_activation = LeakyReLU(alpha=self.alpha, name='Hidden_Activation')(hidden_layer)
 
         # Demapping layer - used in decoder model
         hidden_input = Input(shape=(hidden_dim,), name='Demapping_Input')
 
-        demapping_layer = Dense(input_dim, activation='sigmoid', name='Demapping_Layer')(hidden_layer)
-        # demapping_layer = Activation(activation='sigmoid', name='Demapping_Layer')(hidden_layer)
+        # demapping_layer = Dense(input_dim, activation='sigmoid', name='Demapping_Layer')(hidden_layer)
+        demapping_layer = Activation(activation='sigmoid', name='Demapping_Layer')(hidden_layer)
 
         # Output layer
         output_layer = Dense(input_dim, activation='sigmoid', name='Output_Layer')(demapping_layer)
@@ -77,7 +77,7 @@ class Autoassociative(object):
         adadelta = Adadelta(lr=self.alpha)
 
         self._autoencoder_model.compile(
-            optimizer=sgd,
+            optimizer=adam,
             loss='mean_squared_error',
             # options=run_opts
         )

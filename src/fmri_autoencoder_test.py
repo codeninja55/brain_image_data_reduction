@@ -58,9 +58,9 @@ raw_data_x, raw_data_y = load_fmri()
 print('Raw data shape - x: {}, y: {}'.format(raw_data_x[0].shape, raw_data_y[0].shape))
 
 # %% # ===== # PREPROCESSING # ===== #
-RANDOM_SEED = 14000604
+# RANDOM_SEED = 14000604
 
-np.random.seed(RANDOM_SEED)
+# np.random.seed(RANDOM_SEED)
 # concatenate all subjects randomly except 1
 subject_choices = [x for x in np.arange(6)]
 rand_idx = np.random.randint(0, len(subject_choices))
@@ -100,31 +100,31 @@ X_train, X_val, y_train, y_val = train_test_split(
     X_train_full,
     y_train_encoded,
     train_size=0.7,
-    random_state=RANDOM_SEED
+    # random_state=RANDOM_SEED
 )
 
-# print('Training set shape - x: {}, y: {}'.format(X_train_full.shape, y_train_full.shape))
-# print('Training eval shape - x: {}, y: {}'.format(X_val.shape, y_val.shape))
-# print('Testing data shape - x: {}, y: {}'.format(X_test.shape, y_test_encoded.shape))
+print('Training set shape - x: {}, y: {}'.format(X_train.shape, y_train.shape))
+print('Training eval shape - x: {}, y: {}'.format(X_val.shape, y_val.shape))
+print('Testing data shape - x: {}, y: {}'.format(X_test.shape, y_test_encoded.shape))
 
-# print('Training set class distribution:\n 1: {} \n 2: {}'.format(*Counter(y_train).values()))
-# print('Evaluation set class distribution:\n 1: {} \n 2: {}'.format(*Counter(y_val).values()))
-# print('Testing set class distribution:\n 1: {} \n 2: {}'.format(*Counter(y_test).values()))
+print('Training set class distribution:\n 1: {} \n 2: {}'.format(*Counter(y_train).values()))
+print('Evaluation set class distribution:\n 1: {} \n 2: {}'.format(*Counter(y_val).values()))
+print('Testing set class distribution:\n 1: {} \n 2: {}'.format(*Counter(y_test).values()))
 
 # %% # ===== # DATA ENCODING # ===== #
 print('Dimensionality Reduction')
-bottleneck_dim = 600
+bottleneck_dim = 300
 print('Bottleneck Dimensions: {}'.format(bottleneck_dim))
 
-autoencoder = Autoencoder(X_full.shape[1], bottleneck_dim, epoch=500, learning_rate=1e-4)
+autoencoder = Autoencoder(X_full.shape[1], bottleneck_dim, epoch=1000, learning_rate=1e-4)
 # autoencoder.plot_model()
 autoencoder.summary()
 # prompt_continue('Do you want to continue with the autoassociative encoding of this model?')
 
-autoencoder.train(X_full, X_full, batch_size=8)
+autoencoder.train(X_full, X_full, batch_size=32)
 
 export_X = autoencoder.get_encoded_image(X_full)
-encoded_X_train = autoencoder.get_encoded_image(X_full)
+encoded_X_train = autoencoder.get_encoded_image(X_train)
 encoded_X_val = autoencoder.get_encoded_image(X_val)
 encoded_X_test = autoencoder.get_encoded_image(X_test)
 
@@ -162,26 +162,15 @@ gc.collect()
 
 # %%
 
-# fmri_classifier_run(
-#     input_data=export_X_2,
-#     input_labels=y_full,
-#     validation_data=encoded_X_val_2,
-#     validation_labels=y_val,
-#     test_data=encoded_X_test_2,
-#     test_labels=y_test_encoded,
-#     verbose=1,
-#     evaluate=True
-# )
-
-# fmri_classifier_run(
-#     input_data=encoded_X_train,
-#     input_labels=y_train,
-#     validation_data=encoded_X_val,
-#     validation_labels=y_val,
-#     test_data=encoded_X_test,
-#     test_labels=y_test_encoded,
-#     verbose=1,
-#     evaluate=True
-# )
+fmri_classifier_run(
+    input_data=encoded_X_train,
+    input_labels=y_train,
+    validation_data=encoded_X_val,
+    validation_labels=y_val,
+    test_data=encoded_X_test,
+    test_labels=y_test_encoded,
+    verbose=1,
+    evaluate=True
+)
 
 # base_clf.evaluate(base_X_test, base_y_test, verbose=0)

@@ -74,7 +74,7 @@ for subject in raw_data:
     autoencoder.summary()
     # prompt_continue('Do you want to continue with the autoassociative encoding of this model?')
 
-    autoencoder.train(X, X, batch_size=16)
+    autoencoder.train(X, X, batch_size=32)
 
     export_X = autoencoder.get_encoded_image(X)
 

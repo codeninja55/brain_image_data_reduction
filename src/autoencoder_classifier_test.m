@@ -3,8 +3,10 @@ addpath('fmri', 'fmri/Netlab')
 
 
 % load the data
-examples = csvread('data/encoded_fmri_X.csv')
-labels = csvread('data/encoded_fmri_y.csv')
+%examples = csvread('data/encoded_fmri_X.csv')
+examples = csvread('data/autoassociated_fmri_X.csv')
+%labels = csvread('data/encoded_fmri_y.csv')
+labels = csvread('data/autoassociated_fmri_y.csv')
 
 % split the data in half
 ntotal   = size(examples,1);

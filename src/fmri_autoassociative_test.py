@@ -53,49 +53,41 @@ from fmri_classifier_test import base_classifier_test, get_base_classifier_data
 
 # %% # ===== # LOADING DATA # ===== #
 
-raw_data_x, raw_data_y = load_smaller_fmri()
+raw_data_x, raw_data_y = load_fmri()
 # raw_data_x, raw_data_y = load_smaller_fmri()
 print('Raw data shape - x: {}, y: {}'.format(raw_data_x[0].shape, raw_data_y[0].shape))
 
 # %% # ===== # PREPROCESSING # ===== #
-RANDOM_SEED = 14000604
+# RANDOM_SEED = 14000604
 
-np.random.seed(RANDOM_SEED)
+# np.random.seed(RANDOM_SEED)
 # concatenate all subjects randomly except 1
 subject_choices = [x for x in np.arange(6)]
 rand_idx = np.random.randint(0, len(subject_choices))
 test_subject = subject_choices.pop(rand_idx)
 
 # concatenate all the random choices of subjects to train on
-_X_train_full = raw_data_x[0]
+X_train_full = raw_data_x[0]
 y_train_full = raw_data_y[0]
 for i in subject_choices[1:len(subject_choices)]:
-    _X_train_full = np.append(_X_train_full, raw_data_x[i], axis=0)
+    X_train_full = np.append(X_train_full, raw_data_x[i], axis=0)
     y_train_full = np.append(y_train_full, raw_data_y[i], axis=0)
 
 y_train_full = y_train_full.reshape(-1)
-_X_test = raw_data_x[test_subject]
+X_test = raw_data_x[test_subject]
 y_test = raw_data_y[test_subject].reshape(-1)
 
-_X_full = raw_data_x.pop(0)
+X_full = raw_data_x.pop(0)
 y_full = raw_data_y.pop(0)
 for x_arr, y_arr in zip(raw_data_x, raw_data_y):
-    _X_full = np.append(_X_full, x_arr, axis=0)
+    X_full = np.append(X_full, x_arr, axis=0)
     y_full = np.append(y_full, y_arr, axis=0)
 
+print('Dtype: {}'.format(X_full.dtype))
 
-# Optimise by reducing float size for TF on GPU
-X_full = _X_full.astype(np.float32, copy=True)
-X_train_full = _X_train_full.astype(np.float32, copy=True)
-X_test = _X_test.astype(np.float32, copy=True)
-
-del raw_data_x, raw_data_y, _X_full, _X_train_full, _X_test
+del raw_data_x, raw_data_y
 
 # %% # ===== # DATA ENCODING # ===== #
-
-# from keras.utils import to_categorical
-# y_train_encoded = to_categorical(y)
-# y_test_encoded = to_categorical(y_test)
 
 le = LabelEncoder()
 y_train_encoded = le.fit_transform(y_train_full)
@@ -105,7 +97,7 @@ X_train, X_val, y_train, y_val = train_test_split(
     X_train_full,
     y_train_encoded,
     train_size=0.7,
-    random_state=RANDOM_SEED
+    # random_state=RANDOM_SEED
 )
 
 print('Training set shape - x: {}, y: {}'.format(X_train_full.shape, y_train_full.shape))
@@ -118,7 +110,7 @@ print('Testing data shape - x: {}, y: {}'.format(X_test.shape, y_test_encoded.sh
 
 # %% # ===== # DATA ENCODING # ===== #
 print('Dimensionality Reduction')
-bottleneck_dim = 300
+bottleneck_dim = 200
 print('Bottleneck Dimensions: {}'.format(bottleneck_dim))
 
 # autoencoder = Autoencoder(X_full.shape[1], bottleneck_dim, epoch=750, learning_rate=1e-4)
@@ -142,28 +134,12 @@ print('Bottleneck Dimensions: {}'.format(bottleneck_dim))
 # np.savetxt('data/encoded_fmri_y.csv', y_full, delimiter=',')
 # np.savetxt('data/raw_fmri_X.csv', X_train_full, delimiter=',')
 
-# %% # ===== # TRAINING AND CLASSIFICATION # ===== #
-
-# base_classifier_test(scaling=True, verbose=0)
-# base_X_train, base_y_train, base_X_val, base_y_val, base_X_test, base_y_test = get_base_classifier_data(scaling=True)
-#
-# base_clf = fmri_classifier_run(
-#     input_data=base_X_train,
-#     input_labels=base_y_train,
-#     validation_data=base_X_val,
-#     validation_labels=base_y_val,
-#     test_data=base_X_test,
-#     test_labels=base_y_test,
-#     verbose=1,
-#     evaluate=False
-# )
-
 # %% AUTOASSOCIATIVE TEST
 
 autoassociative = Autoassociative(X_train_full.shape[1], bottleneck_dim, epoch=500, learning_rate=1e-3)
 autoassociative.summary()
 
-autoassociative.train(X_train_full, X_test, batch_size=8)
+autoassociative.train(X_train_full, X_test, batch_size=1)
 
 export_X_2 = autoassociative.get_encoded_image(X_full)
 encoded_X_train_2 = autoassociative.get_encoded_image(X_train)
@@ -179,7 +155,7 @@ K.clear_session()
 # %%
 
 np.savetxt('data/autoassociated_fmri_X.csv', export_X_2, delimiter=',')
-# np.savetxt('data/encoded_fmri_y.csv', y_full, delimiter=',')
+np.savetxt('data/autoassociated_fmri_y.csv', y_full, delimiter=',')
 
 # %%
 

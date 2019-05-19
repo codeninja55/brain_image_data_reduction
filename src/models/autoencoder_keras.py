@@ -53,7 +53,7 @@ class Autoencoder(object):
         input_layer = Input(shape=(input_dim,), name='Input_Layer')
 
         # Mapping layer
-        mapping_layer = Activation('relu', name='Mapping_Layer')(input_layer)
+        # mapping_layer = Activation('sigmoid', name='Mapping_Layer')(input_layer)
         # mapping_layer = ReLU(input_shape=(hidden_dim,), name='Mapping_Layer')(input_layer)
         # mapping_layer = Identity(lambda x: x, input_shape=(input_dim,))(input_layer)
 
@@ -62,7 +62,7 @@ class Autoencoder(object):
             units=hidden_dim,
             activation='relu',
             activity_regularizer=regularizers.l1(10e-5),
-            name='Bottleneck_Layer')(mapping_layer)
+            name='Bottleneck_Layer')(input_layer)
         # hidden_activation = LeakyReLU(alpha=self.alpha, name='Hidden_Activation')(hidden_layer)
 
         # Demapping layer - used in decoder model
